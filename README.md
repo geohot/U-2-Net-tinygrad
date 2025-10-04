@@ -4,3 +4,12 @@ This repository contains the [tinygrad](https://github.com/tinygrad/tinygrad)-po
 
 ## Setup
 
+```sh
+pip3 install -r requirements.txt
+
+python3 inference.py
+```
+
+## License
+
+Apache-2.0 license

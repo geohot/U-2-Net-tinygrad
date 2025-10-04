@@ -1,4 +1,5 @@
 from tinygrad import Tensor
+from tinygrad.device import Device
 from tinygrad.helpers import get_child
 import numpy as np
 from PIL import Image
@@ -6,6 +7,7 @@ from skimage import io
 import os
 import torch
 from model.u2net_tiny import U2NET
+import time
 
 def normPRED(d):
     ma, mi = d.max(), d.min()
@@ -58,12 +60,22 @@ def inference(net, input):
 
 if __name__ == "__main__":
     unet = U2NET(3,1)
-    loaded = torch.load("./weights/u2net_portrait.pth", map_location="cpu")
+    # portrait drawing model: u2net_portrait.pth"
+    # human segmentation model: u2net_human_seq.pth
+    print("Loading weights...")
+    loaded = torch.load("./weights/u2net_human_seg.pth", map_location="cpu")
 
     for k, v in loaded.items():
       get_child(unet, k).assign(v.numpy()).realize()
 
     image = Image.open("./example_data/test2.jpg")
     image_np = np.array(image)
+
+    print(f"Running U^2 Net on device: {Device.DEFAULT}")
+    start = time.perf_counter()
     pred = inference(unet, image_np)
+    end = time.perf_counter()
+    elapsed_ms = (end - start) * 1000
+    print(f"Inference time: {elapsed_ms:.3f} ms")
+
     save_output("./example_data/test2.jpg", pred, "./")
