@@ -68,7 +68,7 @@ if __name__ == "__main__":
     for k, v in loaded.items():
       get_child(unet, k).assign(v.numpy()).realize()
 
-    image = Image.open("./example_data/test2.jpg")
+    image = Image.open("./example_data/test_ref_2.jpg")
     image_np = np.array(image)
 
     print(f"Running U^2 Net on device: {Device.DEFAULT}")
@@ -78,4 +78,4 @@ if __name__ == "__main__":
     elapsed_ms = (end - start) * 1000
     print(f"Inference time: {elapsed_ms:.3f} ms")
 
-    save_output("./example_data/test2.jpg", pred, "./")
+    save_output("./example_data/test_ref_2.jpg", pred, "./")

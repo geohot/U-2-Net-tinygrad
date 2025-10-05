@@ -10,7 +10,6 @@ class REBNCONV():
         return self.bn_s1(self.conv_s1(x)).relu()
     
 # upsample tensor 'src' to have the same spatial size with tensor 'tar'
-# torch implementation uses 'bilinear', we don't have it in tinygrad
 def _upsample_like(src:Tensor,tar:Tensor) -> Tensor:
     out = src.interpolate(tar.shape, mode="linear")
     return out
@@ -38,19 +37,19 @@ class RSU7():
         hxin = self.rebnconvin(hx)
 
         hx1 = self.rebnconv1(hxin)
-        hx = hx1.max_pool2d(2, stride=2)
+        hx = hx1.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx2 = self.rebnconv2(hx)
-        hx = hx2.max_pool2d(2, stride=2)
+        hx = hx2.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx3 = self.rebnconv3(hx)
-        hx = hx3.max_pool2d(2, stride=2)
+        hx = hx3.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx4 = self.rebnconv4(hx)
-        hx = hx4.max_pool2d(2, stride=2)
+        hx = hx4.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx5 = self.rebnconv5(hx)
-        hx = hx5.max_pool2d(2, stride=2)
+        hx = hx5.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx6 = self.rebnconv6(hx)
         hx7 = self.rebnconv7(hx6)
@@ -96,16 +95,16 @@ class RSU6():
         hxin = self.rebnconvin(hx)
 
         hx1 = self.rebnconv1(hxin)
-        hx = hx1.max_pool2d(2, stride=2)
+        hx = hx1.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx2 = self.rebnconv2(hx)
-        hx = hx2.max_pool2d(2, stride=2)
+        hx = hx2.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx3 = self.rebnconv3(hx)
-        hx = hx3.max_pool2d(2, stride=2)
+        hx = hx3.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx4 = self.rebnconv4(hx)
-        hx = hx4.max_pool2d(2, stride=2)
+        hx = hx4.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx5 = self.rebnconv5(hx)
 
@@ -147,13 +146,13 @@ class RSU5():
         hxin = self.rebnconvin(hx)
 
         hx1 = self.rebnconv1(hxin)
-        hx = hx1.max_pool2d(2, stride=2)
+        hx = hx1.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx2 = self.rebnconv2(hx)
-        hx = hx2.max_pool2d(2, stride=2)
+        hx = hx2.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx3 = self.rebnconv3(hx)
-        hx = hx3.max_pool2d(2, stride=2)
+        hx = hx3.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx4 = self.rebnconv4(hx)
         hx5 = self.rebnconv5(hx4)
@@ -189,10 +188,10 @@ class RSU4():
         hxin = self.rebnconvin(hx)
 
         hx1 = self.rebnconv1(hxin)
-        hx = hx1.max_pool2d(2,stride=2)
+        hx = hx1.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx2 = self.rebnconv2(hx)
-        hx = hx2.max_pool2d(2, stride=2)
+        hx = hx2.max_pool2d(2, stride=2, ceil_mode=True)
 
         hx3 = self.rebnconv3(hx)
         hx4 = self.rebnconv4(hx3)
@@ -264,23 +263,23 @@ class U2NET():
 
         #stage 1
         hx1 = self.stage1(hx)
-        hx = hx1.max_pool2d(2, stride=2)
+        hx = hx1.max_pool2d(2, stride=2, ceil_mode=True)
 
         #stage 2
         hx2 = self.stage2(hx)
-        hx = hx2.max_pool2d(2, stride=2)
+        hx = hx2.max_pool2d(2, stride=2, ceil_mode=True)
 
         #stage 3
         hx3 = self.stage3(hx)
-        hx = hx3.max_pool2d(2, stride=2)
+        hx = hx3.max_pool2d(2, stride=2, ceil_mode=True)
 
         #stage 4
         hx4 = self.stage4(hx)
-        hx = hx4.max_pool2d(2, stride=2)
+        hx = hx4.max_pool2d(2, stride=2, ceil_mode=True)
 
         #stage 5
         hx5 = self.stage5(hx)
-        hx = hx5.max_pool2d(2, stride=2)
+        hx = hx5.max_pool2d(2, stride=2, ceil_mode=True)
 
         #stage 6
         hx6 = self.stage6(hx)
