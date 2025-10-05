@@ -8,6 +8,7 @@ import os
 import torch
 from model.u2net_tiny import U2NET
 import time
+import cv2
 
 def normPRED(d):
     ma, mi = d.max(), d.min()
@@ -68,14 +69,14 @@ if __name__ == "__main__":
     for k, v in loaded.items():
       get_child(unet, k).assign(v.numpy()).realize()
 
-    image = Image.open("./example_data/test_ref_2.jpg")
-    image_np = np.array(image)
+    image = cv2.imread("./example_data/test2.jpg")
+    image = cv2.resize(image, (320,320))
 
     print(f"Running U^2 Net on device: {Device.DEFAULT}")
     start = time.perf_counter()
-    pred = inference(unet, image_np)
+    pred = inference(unet, image)
     end = time.perf_counter()
     elapsed_ms = (end - start) * 1000
     print(f"Inference time: {elapsed_ms:.3f} ms")
 
-    save_output("./example_data/test_ref_2.jpg", pred, "./")
+    save_output("./example_data/test2.jpg", pred, "./")

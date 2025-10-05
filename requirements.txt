@@ -3,3 +3,4 @@ scikit-image
 tinygrad
 pillow
 torch
+opencv-python
