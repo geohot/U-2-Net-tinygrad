@@ -9,6 +9,7 @@ import torch
 from model.u2net_tiny import U2NET, U2NETP
 import time
 import cv2
+import argparse
 
 def normPRED(d):
     ma, mi = d.max(), d.min()
@@ -57,17 +58,48 @@ def inference(net, input):
     return pred
 
 if __name__ == "__main__":
-    unet = U2NETP(3,1)
+    parser = argparse.ArgumentParser(description="U^2 Net on tinygrad")
+
+    parser.add_argument(
+        "-i",
+        type=str,
+        default="./example_data/test2.jpg",
+        help="Path to the input image"
+    )
+
+    parser.add_argument(
+        "-m",
+        type=str,
+        default="seg",
+        help="Model to load"
+    )
+
+    args = parser.parse_args()
+
+    if args.m == "seg_small":
+        unet = U2NETP(3,1)
+    else:
+        unet = U2NET(3,1)
+
     # portrait drawing model: u2net_portrait.pth"
     # human segmentation model: u2net_human_seg.pth
     print("Loading weights...")
-    loaded = torch.load("./weights/u2netp.pth", map_location="cpu")
+    if args.m == "seg_small":
+        loaded = torch.load("./weights/u2netp.pth", map_location="cpu")
+    elif args.m == "seg":
+        loaded = torch.load("./weights/u2net_human_seg.pth", map_location="cpu")
+    elif args.m == "portrait":
+        loaded = torch.load("./weights/u2net_portrait.pth", map_location="cpu")
+    else:
+        raise RuntimeError(f"Unknown model selected={args.m}")
 
     for k, v in loaded.items():
       get_child(unet, k).assign(v.numpy()).realize()
 
-    image = cv2.imread("./example_data/test2.jpg")
-    image = cv2.resize(image, (320,320))
+    image = cv2.imread(args.i)
+
+    if args.m.startswith("seg"):
+        image = cv2.resize(image, (320,320))
 
     print(f"Running U^2 Net on device: {Device.DEFAULT}")
     start = time.perf_counter()
@@ -76,4 +108,4 @@ if __name__ == "__main__":
     elapsed_ms = (end - start) * 1000
     print(f"Inference time: {elapsed_ms:.3f} ms")
 
-    save_output("./example_data/test2.jpg", pred, "./")
+    save_output(args.i, pred, "./")
