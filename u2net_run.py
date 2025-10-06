@@ -6,7 +6,7 @@ from PIL import Image
 from skimage import io
 import os
 import torch
-from model.u2net_tiny import U2NET
+from model.u2net_tiny import U2NET, U2NETP
 import time
 import cv2
 
@@ -57,11 +57,11 @@ def inference(net, input):
     return pred
 
 if __name__ == "__main__":
-    unet = U2NET(3,1)
+    unet = U2NETP(3,1)
     # portrait drawing model: u2net_portrait.pth"
-    # human segmentation model: u2net_human_seq.pth
+    # human segmentation model: u2net_human_seg.pth
     print("Loading weights...")
-    loaded = torch.load("./weights/u2net_human_seg.pth", map_location="cpu")
+    loaded = torch.load("./weights/u2netp.pth", map_location="cpu")
 
     for k, v in loaded.items():
       get_child(unet, k).assign(v.numpy()).realize()
