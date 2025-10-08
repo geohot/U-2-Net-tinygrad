@@ -76,20 +76,21 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.m == "seg_small":
-        unet = U2NETP(3,1)
-    else:
-        unet = U2NET(3,1)
+    unet = U2NET(3,1)
 
-    # portrait drawing model: u2net_portrait.pth"
-    # human segmentation model: u2net_human_seg.pth
+    if args.m == "fg_small" or args.m == "sky_small":
+        unet = U2NETP(3,1)
+
     print("Loading weights...")
-    if args.m == "seg_small":
-        loaded = torch.load("./weights/u2netp.pth", map_location="cpu")
-    elif args.m == "seg":
-        loaded = torch.load("./weights/u2net_human_seg.pth", map_location="cpu")
+
+    if args.m == "fg_small":
+        loaded = torch.load("./weights/u2netp_fg.pth", map_location="cpu")
+    elif args.m == "fg":
+        loaded = torch.load("./weights/u2net_fg.pth", map_location="cpu")
     elif args.m == "portrait":
         loaded = torch.load("./weights/u2net_portrait.pth", map_location="cpu")
+    elif args.m == "sky_small":
+        loaded = torch.load("./weights/u2netp_sky.pth", map_location="cpu")
     else:
         raise RuntimeError(f"Unknown model selected={args.m}")
 
@@ -98,7 +99,7 @@ if __name__ == "__main__":
 
     image = cv2.imread(args.i)
 
-    if args.m.startswith("seg"):
+    if args.m != "portrait":
         image = cv2.resize(image, (320,320))
 
     print(f"Running U^2 Net on device: {Device.DEFAULT}")
