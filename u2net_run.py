@@ -1,11 +1,10 @@
-from tinygrad import Tensor
+from tinygrad import Tensor, nn
 from tinygrad.device import Device
 from tinygrad.helpers import get_child
 import numpy as np
 from PIL import Image
 from skimage import io
 import os
-import torch
 from model.u2net_tiny import U2NET, U2NETP
 import time
 import cv2
@@ -84,13 +83,13 @@ if __name__ == "__main__":
     print("Loading weights...")
 
     if args.m == "fg_small":
-        loaded = torch.load("./weights/u2netp_fg.pth", map_location="cpu")
+        loaded = nn.state.torch_load("./weights/u2netp_fg.pth")
     elif args.m == "fg":
-        loaded = torch.load("./weights/u2net_fg.pth", map_location="cpu")
+        loaded = nn.state.torch_load("./weights/u2net_fg.pth")
     elif args.m == "portrait":
-        loaded = torch.load("./weights/u2net_portrait.pth", map_location="cpu")
+        loaded = nn.state.torch_load("./weights/u2net_portrait.pth")
     elif args.m == "sky_small":
-        loaded = torch.load("./weights/u2netp_sky.pth", map_location="cpu")
+        loaded = nn.state.torch_load("./weights/u2netp_sky.pth")
     else:
         raise RuntimeError(f"Unknown model selected={args.m}")
 
